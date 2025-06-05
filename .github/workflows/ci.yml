@@ -5,6 +5,8 @@ on:
     branches: [main]
   push:
     branches: [dev]
+env:
+  ACTIONS_STEP_DEBUG: true
 
 permissions:
   contents: read
@@ -12,8 +14,6 @@ permissions:
 
 jobs:
   terraform-ci:
-    env:
-      ACTIONS_STEP_DEBUG: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
