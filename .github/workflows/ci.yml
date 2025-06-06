@@ -35,18 +35,18 @@ jobs:
       #   with:
       #     api-key: ${{ secrets.INFRACOST_API_KEY }}
           
-      - name: Send Email(fail) 
-        if: failure()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "🚨 Monitoring CI Failed"
-          to: yourteam@email.com
-          from: Monitoring CI <your@email.com>
-          body: "Terraform Plan or Validate failed. Please check the Actions log."
+      # - name: Send Email(fail) 
+      #   if: failure()
+      #   uses: dawidd6/action-send-mail@v3
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 587
+      #     username: ${{ secrets.EMAIL_USERNAME }}
+      #     password: ${{ secrets.EMAIL_PASSWORD }}
+      #     subject: "🚨 Monitoring CI Failed"
+      #     to: yourteam@email.com
+      #     from: Monitoring CI <your@email.com>
+      #     body: "Terraform Plan or Validate failed. Please check the Actions log."
 
       - uses: hashicorp/setup-terraform@v1
         with:
