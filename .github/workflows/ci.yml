@@ -115,7 +115,7 @@ jobs:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
 
       - name: Infracost Comment on Pull Request
-        uses: infracost/actions@v2
+        uses: infracost/actions@v1
         with:
           entrypoint: comment
           path: infracost.json
@@ -123,5 +123,6 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 
