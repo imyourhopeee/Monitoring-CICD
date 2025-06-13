@@ -63,8 +63,3 @@ jobs:
           scan-type: config
           hide-progress: true
 
-      - name: Run Infracost (비용 예측)
-        run: |
-          infracost breakdown --path . --format json --out-file infracost.json
-
-        
