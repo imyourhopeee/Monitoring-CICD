@@ -110,7 +110,7 @@ jobs:
         uses: infracost/actions/setup@v2
 
       - name: Generate Infracost Breakdown
-        run: infracost breakdown --path=plan.json --format=json --out-file=infracost.json
+        run: infracost breakdown --path=plan.json --format=json --out-file /tmp/infracost.json
         env:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
 
