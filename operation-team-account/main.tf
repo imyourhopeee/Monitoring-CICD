@@ -3,7 +3,10 @@ module "s3" {
 }
 
 module "opensearch" {
-  source = "./modules/opensearch"
+  source             = "./modules/opensearch"
+  sso_role_name      = var.sso_role_name
+  sso_user_name      = var.sso_user_name
+  firehose_role_arn  = module.firehose.firehose_role_arn
 }
 
 module "firehose" {
@@ -12,13 +15,13 @@ module "firehose" {
   s3_bucket_arn         = module.s3.bucket_arn
 }
 
-module "cloudwatch_logs_to_firehose" {
-  source = "./modules/cloudwatch_logs_to_firehose"
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
 
   subscription_filter_name = "cw-to-firehose"
   log_group_name           = var.log_group_name
-  firehose_arn             = var.firehose_arn
-  role_arn                 = var.role_arn
+  firehose_arn = module.firehose.delivery_stream_arn
+  role_arn     = module.firehose.firehose_role_arn
 }
 module "securitylake" {
   source = "./modules/securitylake"

@@ -28,16 +28,23 @@ resource "aws_opensearch_domain" "siem" {
   }
 
     access_policies = jsonencode({
-      Version = "2012-10-17",
-      Statement = [
-       {
-         Effect = "Allow",
-         Principal = {
-            AWS = "arn:aws:sts::${data.aws_caller_identity.current.account_id}:assumed-role/${var.sso_role_name}/${var.sso_user_name}"
-          },
-         Action   = "es:*",
-         Resource = "arn:aws:es:ap-northeast-2:${data.aws_caller_identity.current.account_id}:domain/siem-domain/*"
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = {
+          AWS = [
+            "arn:aws:sts::${data.aws_caller_identity.current.account_id}:assumed-role/${var.sso_role_name}/${var.sso_user_name}",
+            var.firehose_role_arn,
+          ]
         }
-      ]
-    })
+        Action   = "es:*"
+        # 도메인 및 그 하위 인덱스·도큐먼트 전체 리소스
+        Resource = [
+          aws_opensearch_domain.siem.arn,
+          "${aws_opensearch_domain.siem.arn}/*",
+        ]
+      }
+    ]
+  })
 }

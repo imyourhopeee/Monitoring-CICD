@@ -1,14 +1,14 @@
+variable "sso_role_name" {
+  description = "SSO에서 부여된 IAM 역할 이름"
+  type        = string
+}
+
+variable "sso_user_name" {
+  description = "SSO 세션 사용자 이름"
+  type        = string
+}
+
 variable "log_group_name" {
-  description = "CloudWatch 로그 그룹 이름"
-  type        = string
-}
-
-variable "firehose_arn" {
-  description = "Kinesis Firehose ARN"
-  type        = string
-}
-
-variable "role_arn" {
-  description = "CloudWatch → Firehose 연결용 IAM Role ARN"
+  description = "전송할 CloudWatch Log Group 이름"
   type        = string
 }

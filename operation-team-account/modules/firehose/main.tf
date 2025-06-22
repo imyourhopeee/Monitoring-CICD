@@ -20,32 +20,45 @@ resource "aws_iam_role_policy" "firehose_policy" {
   role = aws_iam_role.firehose_role.id
 
   policy = jsonencode({
-    Version = "2012-10-17",
+    Version = "2012-10-17"
     Statement = [
+      # 1) OpenSearch 접근 권한: 도메인 자체와 색인 아래 객체만 허용
       {
-        Effect = "Allow",
-        Action = [
+        Effect   = "Allow"
+        Action   = [
           "es:DescribeElasticsearchDomain",
           "es:DescribeElasticsearchDomains",
           "es:DescribeElasticsearchDomainConfig",
           "es:ESHttpPost",
           "es:ESHttpPut",
-          "es:ESHttpGet"
-        ],
-        Resource = "*"
+          "es:ESHttpGet",
+        ]
+        Resource = [
+          var.opensearch_domain_arn,
+          "${var.opensearch_domain_arn}/*",
+        ]
+      },
+
+      # 2) S3 버킷 접근 권한: 버킷 메타데이터 조회와 객체 Put만 해당 버킷으로 제한
+      {
+        Effect   = "Allow"
+        Action   = [
+          "s3:ListBucket",          # 버킷 목록 조회(버킷 이름에 한정)
+          "s3:GetBucketLocation",   # 리전 조회
+        ]
+        Resource = var.s3_bucket_arn
       },
       {
-        Effect = "Allow",
-        Action = [
-          "s3:PutObject",
-          "s3:GetBucketLocation",
-          "s3:ListBucket"
-        ],
-        Resource = "*"
+        Effect   = "Allow"
+        Action   = [
+          "s3:PutObject",           # 객체 업로드
+        ]
+        Resource = "${var.s3_bucket_arn}/*"
       }
     ]
   })
 }
+
 
 resource "aws_kinesis_firehose_delivery_stream" "to_opensearch" {
   name        = "siem-delivery"
@@ -64,8 +77,21 @@ resource "aws_kinesis_firehose_delivery_stream" "to_opensearch" {
       bucket_arn         = var.s3_bucket_arn
       buffering_interval = 300
       buffering_size     = 5
-      compression_format = "UNCOMPRESSED"
+      compression_format = "GZIP"
       prefix             = "backup/"
     }
+  }
+}
+# S3 버킷에 Lifecycle 정책 붙이기
+resource "aws_s3_bucket_lifecycle_configuration" "firehose_backup" {
+  bucket = aws_s3_bucket.firehose_backup.id
+
+  rule {
+    id     = "ExpireBackup"
+    status = "Enabled"
+
+    filter { prefix = "backup/" }
+
+    expiration { days = 7 }     # 7일 지난 백업은 자동 삭제
   }
 }

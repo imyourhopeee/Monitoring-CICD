@@ -7,3 +7,9 @@ variable "sso_user_name" {
   description = "SSO 세션 사용자 이름 (예: 이메일)"
   type        = string
 }
+
+variable "firehose_role_arn" {
+  description = "ARN of the Firehose IAM role to allow write access"
+  type        = string
+}
+
