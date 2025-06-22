@@ -20,10 +20,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Fetch origin/main
+        run: git fetch origin main
+
       - name: Detect Changed Folder
         id: detect
         run: |
           FILES=$(git diff --name-only origin/main ${{ github.sha }})
+          echo "Changed files:"
           echo "$FILES"
 
           if echo "$FILES" | grep -q '^operation-team-account/'; then
@@ -43,8 +47,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ap-northeast-2
-          role-to-assume: ${{ secrets[format('ROLE_ARN_{0}', steps.detect.outputs.account)]}}
-          
+          role-to-assume: ${{ secrets[format('ROLE_ARN_{0}', steps.detect.outputs.account)] }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
