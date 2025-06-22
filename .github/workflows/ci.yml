@@ -48,7 +48,7 @@ jobs:
         working-directory: ./operation-team-account
         
       - name: Terraform Plan (for infracost)
-        run: terraform plan -out=tfplan.binary
+        run: terraform plan -refresh=false -out=tfplan.binary
         working-directory: ./operation-team-account
 
       # - name: Comment Terraform Plan to PR
