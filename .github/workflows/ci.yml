@@ -48,12 +48,10 @@ jobs:
         working-directory: ./operation-team-account
 
       - name: Comment Terraform Plan to PR
+        if: github.event_name == 'pull_request' 
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           path: plan.txt
-          if: github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Convert Plan to JSON
         run: terraform show -json tfplan.binary > plan.json
