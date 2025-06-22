@@ -1,4 +1,4 @@
-name: Unified CD on PR (via Secrets)
+name: Terraform Plan and Apply
 
 on:
   pull_request:
@@ -7,13 +7,16 @@ on:
       - 'operation-team-account/**'
       - 'identity-team-account/**'
       - 'prod-team-account/**'
+  push:
+    branches:
+      - main  # PR이 main에 merge되었을 때만 apply 실행
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
-  terraform-cd:
+  terraform-plan:
     runs-on: ubuntu-latest
 
     steps:
@@ -60,5 +63,42 @@ jobs:
         working-directory: ${{ steps.detect.outputs.work_dir }}
 
       - name: Terraform Plan
-        run: terraform plan
+        id: plan
+        run: |
+          terraform plan -no-color
         working-directory: ${{ steps.detect.outputs.work_dir }}
+      
+      - name: Check Terraform Plan for Errors
+        run: |
+          if [[ "${{ steps.plan.outputs.stdout }}" == *"No changes. Your infrastructure matches the configuration."* ]]; then
+            echo "Terraform Plan successful"
+          else
+            echo "Terraform Plan failed"
+            exit 1
+        id: check-plan
+
+  terraform-apply:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: terraform-plan  # terraform-plan 작업이 완료된 후에 실행
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ap-northeast-2
+          role-to-assume: ${{ secrets.ROLE_ARN_PROD }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.4.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
