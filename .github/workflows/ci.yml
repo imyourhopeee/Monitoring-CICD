@@ -51,7 +51,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          path: plan.txt
+          path: ./operation-team-account/plan.txt
           recreate: true
           hide_classify: OUTDATED
         env:
