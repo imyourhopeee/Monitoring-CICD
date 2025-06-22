@@ -43,8 +43,12 @@ jobs:
         run: terraform validate
         working-directory: ./operation-team-account
 
-      - name: Terraform Plan
+      - name: Terraform Plan (text for PR commnet)
         run: terraform plan -no-color > plan.txt
+        working-directory: ./operation-team-account
+        
+      - name: Terraform Plan (for infracost)
+        run: terraform plan -out=tfplan.binary
         working-directory: ./operation-team-account
 
       - name: Comment Terraform Plan to PR
@@ -72,7 +76,7 @@ jobs:
         uses: infracost/actions/setup@v2
 
       - name: Generate Infracost Breakdown
-        run: infracost breakdown --path=plan.json --format=json --out-file=/tmp/infracost.json
+        run: infracost breakdown --path=./operation-team-account/plan.json --format=json --out-file=/tmp/infracost.json
         env:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
 
