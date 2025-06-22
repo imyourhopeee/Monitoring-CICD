@@ -68,7 +68,9 @@ jobs:
           path: ./operation-team-account/plan.txt
 
       - name: Convert Plan to JSON
-        run: terraform show -json tfplan.binary > plan.json
+        run: |
+          ls -al
+          terraform show -json tfplan.binary > plan.json
         working-directory: ./operation-team-account
 
       - name: Run Trivy Config Scan
@@ -82,7 +84,13 @@ jobs:
         uses: infracost/actions/setup@v2
 
       - name: Generate Infracost Breakdown
-        run: infracost breakdown --path=./operation-team-account/plan.json --format=json --out-file=/tmp/infracost.json
+        run: |
+          ls -al ./operation-team-account
+          cat ./operation-team-account/plan.json
+          infracost breakdown \
+          --path=./operation-team-account/plan.json \
+          --format=json \
+          --out-file=/tmp/infracost.json
         env:
           INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
 
