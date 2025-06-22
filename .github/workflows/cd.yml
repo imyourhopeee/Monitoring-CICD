@@ -65,12 +65,15 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: |
-          terraform plan -no-color
+          terraform plan -no-color > plan_output.txt
+          cat plan_output.txt
+
         working-directory: ${{ steps.detect.outputs.work_dir }}
+        continue-on-error: true
       
       - name: Check Terraform Plan for Errors
         run: |
-          if [[ "${{ steps.plan.outputs.stdout }}" == *"No changes. Your infrastructure matches the configuration."* ]]; then
+          if grep -q "No changes. Your infrastructure matches the configuration." plan_output.txt; then
             echo "Terraform Plan successful"
           else
             echo "Terraform Plan failed"
