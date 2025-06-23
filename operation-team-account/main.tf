@@ -8,9 +8,10 @@ resource "null_resource" "test" {
 }
 
 resource "null_resource" "test1" {
-  triggers = {
-    always_run = "${timestamp()}"
+    triggers = {
+    always_run = "test1-${timestamp()}"
   }
+
 }
 #test2
 
