@@ -8,7 +8,7 @@ resource "null_resource" "test" {
 }
 
 resource "null_resource" "test1" {
-    triggers = {
+  triggers = {
     always_run = "test1-${timestamp()}"
   }
 
