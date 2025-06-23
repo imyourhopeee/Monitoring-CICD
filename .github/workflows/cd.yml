@@ -119,6 +119,7 @@ jobs:
 
       - name: Terraform InitS
         run: terraform init
+        working-directory: ${{ steps.detect.outputs.work_dir }}
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
