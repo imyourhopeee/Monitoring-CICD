@@ -44,7 +44,7 @@ jobs:
           else
             echo "No relevant folder changed. Skipping rest of workflow."
             echo "skip=true" >> $GITHUB_OUTPUT
-
+          fi
       # 4. AWS Credentials 설정
       - name: Configure AWS Credentials via OIDC
         if: steps.detect.outputs.skip != 'true'
