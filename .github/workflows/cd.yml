@@ -73,10 +73,15 @@ jobs:
       
       - name: Check Terraform Plan for Errors
         run: |
-          if grep -q "No changes. Your infrastructure matches the configuration." plan_output.txt; then
-            echo "Terraform Plan successful"
+          if test -f plan_output.txt; then
+            if grep -q "No changes. Your infrastructure matches the configuration." plan_output.txt; then
+              echo "Terraform Plan successful"
+            else
+              echo "Terraform Plan failed"
+              exit 1
+            fi
           else
-            echo "Terraform Plan failed"
+            echo "plan_output.txt not found"
             exit 1
           fi
         id: check-plan
