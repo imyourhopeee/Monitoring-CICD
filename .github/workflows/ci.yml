@@ -69,9 +69,8 @@ jobs:
         working-directory: ${{ steps.detect.outputs.work_dir }}
 
       # 8. terraform fmt 코드 정렬 검사
-      - name: Terraform Format Check
+      - name: Terraform Format Check (root)
         run: terraform fmt -check -recursive
-        working-directory: ${{ steps.detect.outputs.work_dir }}
 
       # 9. terraform validate 문법 검증
       - name: Terraform Validate
