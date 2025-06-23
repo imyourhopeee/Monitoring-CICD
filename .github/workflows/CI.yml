@@ -3,6 +3,10 @@ name: Monitoring CI
 on:
   pull_request:
     branches: [main] # main 브랜치에 대한 PR 이벤트에서만 실행
+    paths:
+      - "operation-team-account/**"
+      - "identity-team-account/**"
+      - "prod-team-account/**"
 
 permissions:
   contents: read # GitHub repo의 내용을 읽을 권한
