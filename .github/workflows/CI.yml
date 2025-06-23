@@ -3,17 +3,17 @@ name: Monitoring CI
 on:
   push:
     branches: [main]
-    paths:
-      - "operation-team-account/**"
-      - "identity-team-account/**"
-      - "prod-team-account/**"
-      - ".github/workflows/**"
+    # paths:
+    #   - "operation-team-account/**"
+    #   - "identity-team-account/**"
+    #   - "prod-team-account/**"
+    #   - ".github/workflows/**"
   pull_request:
     branches: [main] # main 브랜치에 대한 PR 이벤트에서만 실행
-    paths:
-      - "operation-team-account/**"
-      - "identity-team-account/**"
-      - "prod-team-account/**"
+    # paths:
+    #   - "operation-team-account/**"
+    #   - "identity-team-account/**"
+    #   - "prod-team-account/**"
 
 permissions:
   contents: read # GitHub repo의 내용을 읽을 권한
