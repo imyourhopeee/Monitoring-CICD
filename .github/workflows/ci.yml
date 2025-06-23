@@ -30,7 +30,6 @@ jobs:
           echo "Changed files:"
           echo "$FILES"
 
-          # 디렉토리별로 account 이름 및 working directory 설정
           if echo "$FILES" | grep -q '^operation-team-account/'; then
             echo "account=OPERATION" >> $GITHUB_OUTPUT
             echo "work_dir=operation-team-account" >> $GITHUB_OUTPUT
@@ -41,8 +40,9 @@ jobs:
             echo "account=PROD" >> $GITHUB_OUTPUT
             echo "work_dir=prod-team-account" >> $GITHUB_OUTPUT
           else
-            echo "No relevant Terraform folder changed."
+            echo "No matching folder changed."
             exit 1
+          fi
 
       # 4. 변경된 디렉토리에 맞는 IAM Role Assume (GitHub OIDC 방식)
       - name: Configure AWS Credentials via OIDC
