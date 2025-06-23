@@ -71,23 +71,9 @@ jobs:
         working-directory: ${{ steps.detect.outputs.work_dir }}
         continue-on-error: true
       
-      # - name: Check Terraform Plan for Errors
-      #   run: |
-      #     if test -f plan_output.txt; then
-      #       if grep -q "No changes. Your infrastructure matches the configuration." plan_output.txt; then
-      #         echo "Terraform Plan successful"
-      #       else
-      #         echo "Terraform Plan failed"
-      #         exit 1
-      #       fi
-      #     else
-      #       echo "plan_output.txt not found"
-      #       exit 1
-      #     fi
-      #   id: check-plan
 
   terraform-apply:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs: terraform-plan  # terraform-plan 작업이 완료된 후에 실행
 
