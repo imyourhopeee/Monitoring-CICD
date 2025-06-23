@@ -110,7 +110,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ap-northeast-2
-          role-to-assume: ${{ secrets.ROLE_ARN_PROD }}
+          role-to-assume: ${{ secrets[format('ROLE_ARN_{0}', steps.detect.outputs.account)] }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
