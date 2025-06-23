@@ -5,6 +5,11 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+        branches: [main]
+    paths:
+      - 'operation-team-account/**'
+      - 'identity-team-account/**'
+      - 'prod-team-account/**'
 
 permissions:
   contents: read
